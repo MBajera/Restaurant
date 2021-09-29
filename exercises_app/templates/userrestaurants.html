@@ -1,0 +1,69 @@
+{% extends 'home.html' %}
+{% block content %}
+     <div class="description-div center-div">
+        <h2>Add new restaurant <a href="{% url "restaurant-add" %}">here</a></h2>
+     </div>
+    <div class="head-div">
+            <div style="width: 30%">
+                <h2>Restaurant name</h2>
+            </div>
+            <div class="center" style="width: 15%">  <!-- do notatek-->
+                <h2>Notes</h2>
+            </div>
+            <div class="center" style="width: 20%">
+                <h2>Authorized</h2>
+            </div>
+{#            <div class="center" style="width: 15%">#}  <!-- do rezerwacji stolika-->
+{#                <h2>Tables</h2>#}
+{#            </div>#}
+            <div class="center" style="width: 20%">
+                <h2>Menus</h2>
+            </div>
+    </div>
+    <ol>
+    {% for restaurant in restaurants %}
+        <li>
+            <div class="description" style="width: 30%;">
+            <h2><a href="{% url "restaurant" restaurant.id %}">{{ restaurant.name }}</a></h2>
+            </div>
+            <div class="center" style="width: 15%">
+                <a href="{% url "restaurant-notes" restaurant.id %}">Restaurant notes</a>  <!-- link do notatek -->
+            </div>
+            <div class="center-div" style="width: 20%">
+                {% if restaurant.authorized %}
+                    <div>&#9989;</div>
+{#                        {% if user.is_superuser %}  <!-- wywalenie autoryzacji moze robić tylko admin -->#}
+                            <div><a href="{% url "restaurant-auth" restaurant.id %}">(Set to unauthorized)</a></div>
+{#                        {% endif %}#}
+                {% else %}
+                    <div>&#10060;</div> <!-- moja modyfikacja-->
+                    <div><a href="{% url "restaurant-autPL" restaurant.id %}">(Set to authorized)</a></div>
+{#                    <div><a href="{% url "restaurant-auth" restaurant.id %}">(Set to unauthorized)</a></div>#}
+                {% endif %}
+            </div>
+{#            <div class="center" style="width: 15%">#}
+{#                <h3><a href="{% url "table-list" restaurant.id %}">Tables list</a></h3>#}
+{#            </div>#}
+            <div class="description center-div" style="width: 20%;">
+                {% for menu in restaurant.menu_set.all %}
+                    <div>
+                    <a href="{% url "menu" menu.id %}">{{ menu.name }}</a>
+{#                    {% if menu.authorized %} <!-- ptaszki i X do autoryzacji menu list -->#}
+{#                    &#9989;#}
+{#                    {% else %}#}
+{#                    &#10060;#}
+{#                    {% endif %}#}
+                    </div>
+                    <div>
+                    <a href="{% url "menu-modify" menu.id %}">(Modify</a>,
+                    <a href="{% url "menu-delete" menu.id %}">Delete)</a>
+                    </div>
+                {% endfor %}
+                    <div style="text-decoration: underline">
+                        <a href="{% url "menu-add" restaurant.id %}">Add new menu</a>
+                    <div>
+            </div>
+        </li>
+    {% endfor %}
+    </ol>
+{% endblock content %}
